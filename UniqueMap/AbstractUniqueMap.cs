@@ -9,6 +9,9 @@ namespace UniqueMap
     {
         protected T[] _orderedDomain;
 
+        public BitArray MinValue { get; protected init; } = new BitArray(1,false);              // = 0
+        public BitArray MaxValue { get; protected init; } = null;                               // = Infinity
+
         /// <summary>
         /// Base constructor for any uniques map.
         /// Verify the domain do not contain equal values.
@@ -19,9 +22,8 @@ namespace UniqueMap
             List<T> tempDomain = new List<T>();
             foreach (T item in domain)
             {
-                foreach (T insertedItem in tempDomain)
-                    if (insertedItem.Equals(item))
-                        throw new ArgumentException("The domain contain two or more equivalent objects.");
+                if (tempDomain.Contains(item))
+                    throw new ArgumentException("The domain contain two or more equivalent objects.");
 
                 tempDomain.Add(item);
             }

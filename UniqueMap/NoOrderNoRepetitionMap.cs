@@ -5,14 +5,18 @@ using System.Collections;
 
 namespace UniqueMap
 {
-    public class NoOrderNoRepeatMap<T> : AbstractUniqueMap<T> 
+    public class NoOrderNoRepetitionMap<T> : AbstractUniqueMap<T> 
         where T: IComparable
     {
         /// <summary>
         /// Unique map of groups with no repetitions and no importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public NoOrderNoRepeatMap(ICollection<T> domain) : base(domain) { }
+        public NoOrderNoRepetitionMap(ICollection<T> domain) 
+            : base(domain) 
+        {
+            MaxValue = new BitArray(domain.Count, true);
+        }
 
         /// <summary>
         /// Calculate the unique value of the given collection regardless order.

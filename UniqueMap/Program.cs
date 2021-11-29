@@ -19,13 +19,15 @@ namespace UniqueMap
 
         static private void OrderRepeatExample()
         {
-            OrderRepeatMap<char> map = new OrderRepeatMap<char>(new char[] { 'x', 'c', 'a' });
+            OrderRepetitionMap<char> map = new OrderRepetitionMap<char>(new char[] { 'x', 'c', 'a' });
             List<char[]> lis = new List<char[]>();
 
+            lis.Add(new char[] {});
             lis.Add(new char[] { 'x' });
             lis.Add(new char[] { 'c' });
             lis.Add(new char[] { 'a' });
             lis.Add(new char[] { 'x', 'x', 'x', 'x', 'x', 'x' });
+            lis.Add(new char[] { 'a', 'a', 'a', 'a', 'a', 'a' });
             lis.Add(new char[] { 'x', 'c' });
             lis.Add(new char[] { 'x', 'a' });
             lis.Add(new char[] { 'c', 'x' });
@@ -46,7 +48,7 @@ namespace UniqueMap
 
         static private void OrderNoRepeatExample()
         {
-            OrderNoRepeatMap<ExampleDomain> map = new OrderNoRepeatMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
+            OrderNoRepetitionMap<ExampleDomain> map = new OrderNoRepetitionMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
             List<ExampleDomain[]> lis = new List<ExampleDomain[]>();
             lis.Add(new ExampleDomain[] { });
             lis.Add(new ExampleDomain[] { ExampleDomain.x });
@@ -70,25 +72,24 @@ namespace UniqueMap
 
         static private void NoOrderBoundedRepeatsExample()
         {
-            NoOrderRepeatExample(1000);
+            NoOrderRepeatExample(6);
         }
 
         static private void NoOrderRepeatExample(uint bound = 0)
         {
-            NoOrderRepeatMap<ExampleDomain> map;
+            NoOrderRepetition<ExampleDomain> map;
             if (bound < 2)
-                map = new NoOrderNotBoundedRepeatsMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
+                map = new NoOrderUnlimitedRepetitionMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
             else
-                map = new NoOrderBoundedRepeatsMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z },bound);
+            {
+                map = new NoOrderLimitedRepetitionMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z }, bound);
+                printBitArray(map.MaxValue);
+            }
 
             List<Dictionary<ExampleDomain,uint>> lis = new List<Dictionary<ExampleDomain, uint>>();
             lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 2 }, { ExampleDomain.y, 3 }, { ExampleDomain.z, 1 } });
             lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 2 }, { ExampleDomain.y, 3 }, { ExampleDomain.z, 5 } });
             lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 1 }, { ExampleDomain.y, 0 }, { ExampleDomain.z, 3 } });
-            lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 18 }, { ExampleDomain.y, 0 }, { ExampleDomain.z, 3 } });
-            lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 1 }, { ExampleDomain.y, 30 }, { ExampleDomain.z, 3 } });
-            lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 1 }, { ExampleDomain.y, 410 }, { ExampleDomain.z, 3 } });
-            lis.Add(new Dictionary<ExampleDomain, uint> { { ExampleDomain.x, 1 }, { ExampleDomain.y, 999 }, { ExampleDomain.z, 37 } });
 
             for (int i = 0; i < lis.Count; i++)
             {
@@ -102,7 +103,7 @@ namespace UniqueMap
 
         static private void NoOrderNoRepeatExample()
         {
-            NoOrderNoRepeatMap<ExampleDomain> map = new NoOrderNoRepeatMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
+            NoOrderNoRepetitionMap<ExampleDomain> map = new NoOrderNoRepetitionMap<ExampleDomain>(new ExampleDomain[] { ExampleDomain.x, ExampleDomain.y, ExampleDomain.z });
             List<ExampleDomain[]> lis = new List<ExampleDomain[]>();
             lis.Add(new ExampleDomain[] { });
             lis.Add(new ExampleDomain[] { ExampleDomain.x });

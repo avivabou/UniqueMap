@@ -4,14 +4,28 @@ using System.Collections.Generic;
 
 namespace UniqueMap
 {
-    class OrderNoRepeatMap<T> :AbstractUniqueMap<T> 
+    class OrderNoRepetitionMap<T> :AbstractUniqueMap<T> 
         where T : IComparable
     {
         /// <summary>
         /// Unique map of groups with no repetitions and importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public OrderNoRepeatMap(ICollection<T> domain) : base(domain) { }
+        public OrderNoRepetitionMap(ICollection<T> domain) 
+            : base(domain) 
+        {
+            uint tempBase = (uint) domain.Count;
+            DigitNode root = new DigitNode(tempBase - 1, tempBase);
+            while (tempBase > 2)
+            {
+                tempBase--;
+                DigitNode temp = new DigitNode(tempBase - 1, tempBase);
+                temp.Prev = root;
+                root = temp;
+            }
+
+            MaxValue = root.ToBinaryBitArray();
+        }
 
         /// <summary>
         /// Calculate the unique value of the given ordered collection.

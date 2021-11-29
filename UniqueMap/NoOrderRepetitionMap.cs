@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace UniqueMap
 {
-    public abstract class NoOrderRepeatMap<T> : AbstractUniqueMap<T>
+    public abstract class NoOrderRepetition<T> : AbstractUniqueMap<T>
         where T : IComparable
     {
         /// <summary>
         /// Unique map of groups with repetitions and no importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public NoOrderRepeatMap(ICollection<T> domain) : base(domain) { }
+        public NoOrderRepetition(ICollection<T> domain) : base(domain) { }
 
         /// <summary>
         /// Calculate the unique value of the given collection regardless order.
@@ -53,7 +53,7 @@ namespace UniqueMap
         public abstract Dictionary<T, uint> GetUniqueCountsDictionary(BitArray id);
     }
 
-    public class NoOrderBoundedRepeatsMap<T> : NoOrderRepeatMap<T>
+    public class NoOrderLimitedRepetitionMap<T> : NoOrderRepetition<T>
         where T : IComparable
     {
         private uint _maxRepeats;
@@ -62,10 +62,19 @@ namespace UniqueMap
         /// Unique map of groups with limited repetitions and no importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public NoOrderBoundedRepeatsMap(ICollection<T> domain, uint maxRepeats)
+        public NoOrderLimitedRepetitionMap(ICollection<T> domain, uint maxRepeats)
             : base(domain)
         {
             _maxRepeats = maxRepeats;
+
+            DigitNode root = new DigitNode(maxRepeats,maxRepeats+1);
+            for (int i = 1; i < domain.Count; i++)
+            {
+                root.Next = new DigitNode(maxRepeats, maxRepeats + 1);
+                root = root.Next;
+            }
+
+            MaxValue = root.ToBinaryBitArray();
         }
 
         /// <summary>
@@ -111,15 +120,18 @@ namespace UniqueMap
         }
     }
 
-    public class NoOrderNotBoundedRepeatsMap<T> : NoOrderRepeatMap<T>
+    public class NoOrderUnlimitedRepetitionMap<T> : NoOrderRepetition<T>
         where T : IComparable
     {
         /// <summary>
         /// Unique map of groups with limitless repetitions and no importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public NoOrderNotBoundedRepeatsMap(ICollection<T> domain)
-            : base(domain) { }
+        public NoOrderUnlimitedRepetitionMap(ICollection<T> domain)
+            : base(domain) 
+        {
+            MinValue = new BitArray(1, true);
+        }
 
         /// <summary>
         /// Calculate the unique value of the given counts of domain's items.

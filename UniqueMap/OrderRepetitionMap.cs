@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace UniqueMap
 {
 
-    class OrderRepeatMap<T> : AbstractUniqueMap<T> 
+    class OrderRepetitionMap<T> : AbstractUniqueMap<T> 
         where T : IComparable
     {
         private Dictionary<T, uint> _domainDigits;
@@ -15,13 +15,15 @@ namespace UniqueMap
         /// Unique map of groups with repetitions and importance to order.
         /// </summary>
         /// <param name="domain">Domain items.</param>
-        public OrderRepeatMap(ICollection<T> domain)
+        public OrderRepetitionMap(ICollection<T> domain)
             : base(domain)
         {
             _domainDigits = new Dictionary<T, uint>();
             _digitsBase = (uint)_orderedDomain.Length;
             for (uint i = 0; i < _digitsBase; i++)
                 _domainDigits[_orderedDomain[i]] = i;
+
+            MinValue = new DigitNode(_digitsBase - 2, _digitsBase).ToBinaryBitArray();
         }
 
         /// <summary>
@@ -31,9 +33,15 @@ namespace UniqueMap
         /// <returns>BitArray that present the unique value.</returns>
         public override BitArray GetUniqueID(T[] orderedGroup)
         {
+            if (orderedGroup.Length == 0)
+                return MinValue;
+
             DigitNode step = null;
             for (int i = 0; i < orderedGroup.Length; i++)
             {
+                if (!_domainDigits.ContainsKey(orderedGroup[i]))
+                    throw new ArgumentException(string.Format("The {0} item in the given group isn't part of the domain.", i));
+
                 DigitNode current = new DigitNode(_domainDigits[orderedGroup[i]], _digitsBase);
                 if (i == orderedGroup.Length - 1)
                     current += (_digitsBase - 1);
@@ -66,9 +74,6 @@ namespace UniqueMap
                 value.Push(_orderedDomain[convertedId.Value]);
             }
 
-            if (value.Count == 0)
-                value.Push(_orderedDomain[0]);
-
             return value.ToArray();
         }
 
@@ -82,6 +87,9 @@ namespace UniqueMap
             DigitNode temp = new DigitNode(convertedId.Value, _digitsBase);
             if (temp.Value == 1)
             {
+                if (convertedId.Prev == null)
+                    return;
+
                 convertedId = convertedId.Prev;
                 temp.Prev = new DigitNode(convertedId.Value, _digitsBase);
             }
